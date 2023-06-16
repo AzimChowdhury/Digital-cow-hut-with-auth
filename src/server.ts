@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import app from "./app";
 import { green, red } from "console-log-colors";
 import { Server } from "http";
+import config from "./config";
 const PORT = 5000;
 process.on("uncaughtException", (error) => {
   console.log(error);
@@ -12,7 +13,7 @@ let server: Server;
 
 async function bootstrap() {
   try {
-    // await mongoose.connect(config.database_url as string);
+    await mongoose.connect(config.database_url as string);
     console.log(green("database connected successfully"));
 
     server = app.listen(PORT, () => {
