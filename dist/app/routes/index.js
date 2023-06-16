@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const user_route_1 = require("../modules/users/user.route");
 const signup_route_1 = require("../modules/Signup/signup.route");
 const router = express_1.default.Router();
+// build
 const moduleRoutes = [
     {
         path: "/auth",
