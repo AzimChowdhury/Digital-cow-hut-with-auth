@@ -1,16 +1,15 @@
 {
   "name": "Digital_Cow_Hut",
   "version": "1.0.0",
-  "main": "src/server.ts",
-  "engines": {
-    "node": ">=16"
-  },
+  "main": "src/server.ts", 
+  "description": "",
   "scripts": {
     "start": "node dist/server.js",
     "start-dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": "azim",
   "license": "MIT",
   "dependencies": {
     "console-log-colors": "^0.4.0",

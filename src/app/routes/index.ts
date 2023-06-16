@@ -1,6 +1,6 @@
 import express from "express";
 import { UserRoutes } from "../modules/users/user.route";
-import { signupRoutes } from "../modules/Signup/Signup.route";
+import { signupRoutes } from "../modules/Signup/signup.route";
 const router = express.Router();
 
 const moduleRoutes = [
