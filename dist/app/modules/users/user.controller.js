@@ -31,6 +31,33 @@ const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
+const getSingleUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield user_services_1.UserServices.getSingleUser(req.params.id);
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_1.default.OK,
+            success: true,
+            message: "User fetched successfully !",
+            data: result,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const updateData = req.body;
+    const result = yield user_services_1.UserServices.updateUser(id, updateData);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User updated successfully !",
+        data: result,
+    });
+});
 exports.UserController = {
     getAllUsers,
+    getSingleUser,
+    updateUser,
 };

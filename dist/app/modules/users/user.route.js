@@ -7,5 +7,10 @@ exports.UserRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const user_controller_1 = require("./user.controller");
 const router = express_1.default.Router();
+// get single user
+router.get("/:id", user_controller_1.UserController.getSingleUser);
+// update user
+router.patch("/:id", user_controller_1.UserController.updateUser);
+// get all user
 router.get("/", user_controller_1.UserController.getAllUsers);
 exports.UserRoutes = router;

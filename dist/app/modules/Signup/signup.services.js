@@ -12,12 +12,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupService = void 0;
 const user_model_1 = require("../users/user.model");
 const signup = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    if (payload.role === "buyer" && (!payload.budget || payload.budget === 0)) {
-        throw new Error("Buyer must have budget");
+    // if (payload.role === "buyer" && (!payload.budget || payload.budget === 0)) {
+    //   throw new Error("Buyer must have budget");
+    // } else if (
+    //   payload.role === "seller" &&
+    //   (!payload.income || payload.income === 0)
+    // ) {
+    //   payload.income = 0;
+    // }
+    if (payload.role === "seller") {
+        payload.budget = 0;
+        if (!payload.income) {
+            payload.income = 0;
+        }
     }
-    else if (payload.role === "seller" &&
-        (!payload.income || payload.income === 0)) {
+    if (payload.role === "buyer") {
         payload.income = 0;
+        if (!payload.budget || payload.budget === 0) {
+            throw new Error("Buyer must have budget");
+        }
     }
     const result = yield user_model_1.Users.create(payload);
     return result;

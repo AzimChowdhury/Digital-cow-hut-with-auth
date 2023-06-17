@@ -9,5 +9,6 @@ router.get("/:id", UserController.getSingleUser);
 router.patch("/:id", UserController.updateUser);
 // get all user
 router.get("/", UserController.getAllUsers);
-
+// delete a user
+router.delete("/:id", UserController.deleteUser);
 export const UserRoutes = router;

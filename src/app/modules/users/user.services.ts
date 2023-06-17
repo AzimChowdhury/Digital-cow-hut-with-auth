@@ -50,8 +50,15 @@ const updateUser = async (
   return result;
 };
 
+const deleteUser = async (id: string) => {
+  const result = await Users.findByIdAndDelete({ _id: id });
+
+  return result;
+};
+
 export const UserServices = {
   getAllUsers,
   getSingleUser,
   updateUser,
+  deleteUser,
 };
