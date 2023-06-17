@@ -33,11 +33,4 @@ export const cowFilterableFields = [
   "category",
 ];
 
-export const cowSearchableFields = [
-  "id",
-  "name",
-  "location",
-  "breed",
-  "label",
-  "category",
-];
+export const cowSearchableFields = ["location", "breed", "category"];
