@@ -20,6 +20,39 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getSingleUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await UserServices.getSingleUser(req.params.id);
+
+    sendResponse<IUser>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User fetched successfully !",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateUser = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updateData = req.body;
+  const result = await UserServices.updateUser(id, updateData);
+  sendResponse<IUser>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User updated successfully !",
+    data: result,
+  });
+};
+
 export const UserController = {
   getAllUsers,
+  getSingleUser,
+  updateUser,
 };
