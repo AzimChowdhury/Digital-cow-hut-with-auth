@@ -14,9 +14,7 @@ const user_model_1 = require("../users/user.model");
 const signup = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (payload.role === "seller") {
         payload.budget = 0;
-        if (!payload.income) {
-            payload.income = 0;
-        }
+        payload.income = 0;
     }
     if (payload.role === "buyer") {
         payload.income = 0;

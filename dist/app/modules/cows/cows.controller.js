@@ -12,17 +12,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
-const user_services_1 = require("./user.services");
+exports.CowController = void 0;
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
-const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const cows_services_1 = require("./cows.services");
+const pick_1 = __importDefault(require("../../../shared/pick"));
+const cows_constants_1 = require("./cows.constants");
+const pagination_1 = require("../../../shared/pagination");
+const createCow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield user_services_1.UserServices.getAllUsers();
+        const data = req.body;
+        const result = yield cows_services_1.CowServices.createCow(data);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
-            message: "Users fetched successfully !",
+            message: "Cows created successfully !",
+            data: result,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const getAllCows = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const filters = (0, pick_1.default)(req.query, cows_constants_1.cowFilterableFields);
+        const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationFields);
+        const result = yield cows_services_1.CowServices.getAllCows(filters, paginationOptions);
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_1.default.OK,
+            success: true,
+            message: "Cows fetched successfully !",
             meta: result.meta,
             data: result.data,
         });
@@ -31,13 +51,13 @@ const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
-const getSingleUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getSingleCow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield user_services_1.UserServices.getSingleUser(req.params.id);
+        const result = yield cows_services_1.CowServices.getSingleCow(req.params.id);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
-            message: "User fetched successfully !",
+            message: "Cow fetched successfully !",
             data: result,
         });
     }
@@ -45,15 +65,15 @@ const getSingleUser = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
-const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateCow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         const updateData = req.body;
-        const result = yield user_services_1.UserServices.updateUser(id, updateData);
+        const result = yield cows_services_1.CowServices.updateCow(id, updateData);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
-            message: "User updated successfully !",
+            message: "Cow data updated successfully !",
             data: result,
         });
     }
@@ -61,14 +81,14 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteCow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        const result = yield user_services_1.UserServices.deleteUser(id);
+        const result = yield cows_services_1.CowServices.deleteCow(id);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
-            message: "User deleted successfully !",
+            message: "Cow deleted successfully !",
             data: result,
         });
     }
@@ -76,9 +96,10 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-exports.UserController = {
-    getAllUsers,
-    getSingleUser,
-    updateUser,
-    deleteUser,
+exports.CowController = {
+    createCow,
+    getAllCows,
+    getSingleCow,
+    updateCow,
+    deleteCow,
 };
