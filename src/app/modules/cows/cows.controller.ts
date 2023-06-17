@@ -24,10 +24,16 @@ const createCow = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllCows = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { minPrice, maxPrice } = req.query;
     const filters = pick(req.query, cowFilterableFields);
     const paginationOptions = pick(req.query, paginationFields);
 
-    const result = await CowServices.getAllCows(filters, paginationOptions);
+    const result = await CowServices.getAllCows(
+      filters,
+      paginationOptions,
+      minPrice,
+      maxPrice
+    );
 
     sendResponse<ICow[]>(res, {
       statusCode: httpStatus.OK,
