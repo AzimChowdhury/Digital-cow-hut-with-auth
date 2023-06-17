@@ -25,11 +25,19 @@ export const category = ["Dairy", "Beef", "DualPurpose"];
 
 export const cowFilterableFields = [
   "searchTerm",
+  "id",
   "name",
   "location",
-  "age",
   "breed",
-  "weight",
+  "label",
+  "category",
+];
+
+export const cowSearchableFields = [
+  "id",
+  "name",
+  "location",
+  "breed",
   "label",
   "category",
 ];

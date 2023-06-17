@@ -1,8 +1,12 @@
 import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
-import { ICow } from "./cows.interface";
+import { ICow, ICowFilters } from "./cows.interface";
 import { Cows } from "./cows.model";
 import { Users } from "../users/user.model";
+import { IPaginationOptions } from "../../../shared/pagination";
+import { paginationHelpers } from "../../../shared/paginationHelpers";
+import { cowSearchableFields } from "./cows.constants";
+import { SortOrder } from "mongoose";
 
 const createCow = async (payload: ICow) => {
   const isExist = await Users.findById(payload.seller);
@@ -15,14 +19,57 @@ const createCow = async (payload: ICow) => {
   }
 };
 
-const getAllCows = async () => {
-  const result = await Cows.find().populate("seller");
-  const total = await Cows.countDocuments();
+const getAllCows = async (
+  filters: ICowFilters,
+  paginationOptions: IPaginationOptions
+) => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const andConditions = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      $or: cowSearchableFields.map((field) => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: "i",
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andConditions.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortConditions: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortConditions[sortBy] = sortOrder;
+  }
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
+
+  const result = await Cows.find(whereConditions)
+    .populate("seller")
+    .sort(sortConditions)
+    .skip(skip)
+    .limit(limit);
+  const total =
+    andConditions.length > 0 ? result.length : await Cows.countDocuments();
   return {
     success: true,
     statusCode: 200,
     message: "Cows retrieved successfully",
     meta: {
+      page,
+      limit,
       total,
     },
     data: result,

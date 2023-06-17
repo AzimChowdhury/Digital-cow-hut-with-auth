@@ -27,7 +27,7 @@ const getAllCows = async (req: Request, res: Response, next: NextFunction) => {
     const filters = pick(req.query, cowFilterableFields);
     const paginationOptions = pick(req.query, paginationFields);
 
-    const result = await CowServices.getAllCows();
+    const result = await CowServices.getAllCows(filters, paginationOptions);
 
     sendResponse<ICow[]>(res, {
       statusCode: httpStatus.OK,
