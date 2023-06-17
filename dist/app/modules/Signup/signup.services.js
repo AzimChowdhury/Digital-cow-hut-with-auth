@@ -12,14 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.signupService = void 0;
 const user_model_1 = require("../users/user.model");
 const signup = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    // if (payload.role === "buyer" && (!payload.budget || payload.budget === 0)) {
-    //   throw new Error("Buyer must have budget");
-    // } else if (
-    //   payload.role === "seller" &&
-    //   (!payload.income || payload.income === 0)
-    // ) {
-    //   payload.income = 0;
-    // }
     if (payload.role === "seller") {
         payload.budget = 0;
         if (!payload.income) {

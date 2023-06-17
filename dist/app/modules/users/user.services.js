@@ -63,8 +63,13 @@ const updateUser = (id, payload) => __awaiter(void 0, void 0, void 0, function* 
     });
     return result;
 });
+const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.Users.findByIdAndDelete({ _id: id });
+    return result;
+});
 exports.UserServices = {
     getAllUsers,
     getSingleUser,
     updateUser,
+    deleteUser,
 };

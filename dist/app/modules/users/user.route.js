@@ -13,4 +13,6 @@ router.get("/:id", user_controller_1.UserController.getSingleUser);
 router.patch("/:id", user_controller_1.UserController.updateUser);
 // get all user
 router.get("/", user_controller_1.UserController.getAllUsers);
+// delete a user
+router.delete("/:id", user_controller_1.UserController.deleteUser);
 exports.UserRoutes = router;
