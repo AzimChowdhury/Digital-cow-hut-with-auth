@@ -40,7 +40,7 @@ const createCow = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         throw new Error("sellerId did not matched with any seller");
     }
 });
-const getAllCows = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllCows = (filters, paginationOptions, minPrice, maxPrice) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
     const { page, limit, skip, sortBy, sortOrder } = paginationHelpers_1.paginationHelpers.calculatePagination(paginationOptions);
     const andConditions = [];
@@ -59,6 +59,20 @@ const getAllCows = (filters, paginationOptions) => __awaiter(void 0, void 0, voi
             $and: Object.entries(filtersData).map(([field, value]) => ({
                 [field]: value,
             })),
+        });
+    }
+    if (minPrice) {
+        andConditions.push({
+            price: {
+                $gte: Number(minPrice),
+            },
+        });
+    }
+    if (maxPrice) {
+        andConditions.push({
+            price: {
+                $lte: Number(maxPrice),
+            },
         });
     }
     const sortConditions = {};

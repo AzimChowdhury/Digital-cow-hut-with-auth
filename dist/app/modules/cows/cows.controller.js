@@ -36,9 +36,10 @@ const createCow = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 const getAllCows = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const { minPrice, maxPrice } = req.query;
         const filters = (0, pick_1.default)(req.query, cows_constants_1.cowFilterableFields);
         const paginationOptions = (0, pick_1.default)(req.query, pagination_1.paginationFields);
-        const result = yield cows_services_1.CowServices.getAllCows(filters, paginationOptions);
+        const result = yield cows_services_1.CowServices.getAllCows(filters, paginationOptions, minPrice, maxPrice);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
