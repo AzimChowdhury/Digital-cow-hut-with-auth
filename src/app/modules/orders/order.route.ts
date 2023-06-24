@@ -2,6 +2,8 @@ import express from "express";
 import { orderController } from "./order.controller";
 import validateRequest from "../../middleware/validateRequest";
 import { OrderValidation } from "./order.validation";
+import auth from "../../middleware/auth";
+import { ADMIN_ROLE } from "../admin/admin.interface";
 
 const router = express.Router();
 
@@ -12,6 +14,6 @@ router.post(
   orderController.orderCow
 );
 // get all orders
-router.get("/", orderController.getOrders);
+router.get("/", auth(ADMIN_ROLE.ADMIN), orderController.getOrders);
 
 export const OrderRoutes = router;

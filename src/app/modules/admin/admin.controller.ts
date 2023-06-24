@@ -38,7 +38,28 @@ const loginAdmin = async (req: Request, res: Response) => {
   });
 };
 
+const refreshToken = async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  const result = await AdminServices.refreshToken(refreshToken);
+
+  const cookieOptions = {
+    secure: config.env === "production",
+    httpOnly: true,
+  };
+
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User logged in successfully !",
+    data: result,
+  });
+};
+
 export const AdminController = {
   createAdmin,
   loginAdmin,
+  refreshToken,
 };
