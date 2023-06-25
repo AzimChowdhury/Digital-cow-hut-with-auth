@@ -22,7 +22,3 @@ export type AdminModel = {
     savedPassword: string
   ): Promise<boolean>;
 } & Model<IAdmin>;
-
-export enum ADMIN_ROLE {
-  ADMIN = "admin",
-}

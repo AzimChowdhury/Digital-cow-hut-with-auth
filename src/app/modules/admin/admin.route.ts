@@ -18,7 +18,6 @@ router.post(
 router.post(
   "/login",
   validateRequest(LoginValidation.loginZodSchema),
-  auth(ADMIN_ROLE.ADMIN),
   AdminController.loginAdmin
 );
 

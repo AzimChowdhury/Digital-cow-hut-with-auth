@@ -40,7 +40,7 @@ const loginAdmin = async (req: Request, res: Response) => {
 
 const refreshToken = async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
-
+  console.log(refreshToken);
   const result = await AdminServices.refreshToken(refreshToken);
 
   const cookieOptions = {

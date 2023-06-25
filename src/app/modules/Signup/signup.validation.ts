@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { roles } from "../users/user.constants";
+
 const signupZodSchema = z.object({
   body: z.object({
     phoneNumber: z.string({

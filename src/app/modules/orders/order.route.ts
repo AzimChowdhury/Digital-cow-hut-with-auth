@@ -3,7 +3,7 @@ import { orderController } from "./order.controller";
 import validateRequest from "../../middleware/validateRequest";
 import { OrderValidation } from "./order.validation";
 import auth from "../../middleware/auth";
-import { ADMIN_ROLE } from "../admin/admin.interface";
+import { ROLES } from "../../../shared/Roles";
 
 const router = express.Router();
 
@@ -11,9 +11,14 @@ const router = express.Router();
 router.post(
   "/",
   validateRequest(OrderValidation.orderZodSchema),
+  auth(ROLES.BUYER),
   orderController.orderCow
 );
 // get all orders
-router.get("/", auth(ADMIN_ROLE.ADMIN), orderController.getOrders);
+router.get(
+  "/",
+  auth(ROLES.SELLER, ROLES.ADMIN, ROLES.BUYER),
+  orderController.getOrders
+);
 
 export const OrderRoutes = router;

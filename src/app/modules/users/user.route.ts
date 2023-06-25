@@ -1,16 +1,16 @@
 import express from "express";
 import { UserController } from "./user.controller";
 import auth from "../../middleware/auth";
-import { ADMIN_ROLE } from "../admin/admin.interface";
+import { ROLES } from "../../../shared/Roles";
 
 const router = express.Router();
 
 // get single user
-router.get("/:id", UserController.getSingleUser);
+router.get("/:id", auth(ROLES.ADMIN), UserController.getSingleUser);
 // update user
-router.patch("/:id", UserController.updateUser);
+router.patch("/:id", auth(ROLES.ADMIN), UserController.updateUser);
 // get all user
-router.get("/", UserController.getAllUsers);
+router.get("/", auth(ROLES.ADMIN), UserController.getAllUsers);
 // delete a user
-router.delete("/:id", auth(ADMIN_ROLE.ADMIN), UserController.deleteUser);
+router.delete("/:id", auth(ROLES.ADMIN), UserController.deleteUser);
 export const UserRoutes = router;
