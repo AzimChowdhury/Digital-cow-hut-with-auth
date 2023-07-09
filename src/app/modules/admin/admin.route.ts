@@ -4,7 +4,6 @@ import { AdminValidation } from "./admin.validation";
 import { AdminController } from "./admin.controller";
 import auth from "../../middleware/auth";
 import config from "../../../config";
-import { ADMIN_ROLE } from "./admin.interface";
 import { LoginValidation } from "../users/user.validation";
 import { SignupValidation } from "../Signup/signup.validation";
 const router = express.Router();

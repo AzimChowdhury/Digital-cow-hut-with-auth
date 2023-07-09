@@ -3,6 +3,10 @@ import { UserServices } from "./user.services";
 import sendResponse from "../../../shared/sendResponse";
 import { IUser } from "./user.interface";
 import httpStatus from "http-status";
+import { jwtHelpers } from "../../../helpers/jwtHelpers";
+import config from "../../../config";
+import { Secret } from "jsonwebtoken";
+import { IAdmin } from "../admin/admin.interface";
 
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -70,9 +74,63 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const myProfile = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new Error("Token is not provided");
+  }
+  try {
+    const verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.secret as Secret
+    );
+    const { _id } = verifiedToken;
+    const result = await UserServices.myProfile(_id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My profile information fetched successfully !",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateMyProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new Error("Token is not provided");
+  }
+  try {
+    const verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.secret as Secret
+    );
+    const { _id } = verifiedToken;
+
+    const updateData = req.body;
+    const result = await UserServices.updateMyProfile(_id, updateData);
+    sendResponse<IAdmin>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Profile updated successfully !",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const UserController = {
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  myProfile,
+  updateMyProfile,
 };

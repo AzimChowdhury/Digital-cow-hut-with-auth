@@ -3,6 +3,8 @@ import { Cows } from "../cows/cows.model";
 import { Users } from "../users/user.model";
 import { IUser } from "../users/user.interface";
 import { Orders } from "./order.model";
+import ApiError from "../../../errors/ApiError";
+import httpStatus from "http-status";
 
 const buyCow = async (cowId: string, buyerId: string) => {
   const orderedCow = await Cows.findById(cowId).populate("seller");
@@ -30,14 +32,24 @@ const buyCow = async (cowId: string, buyerId: string) => {
 
   let orderDone = null;
   const session = await mongoose.startSession();
+
   try {
     session.startTransaction();
     orderedCow.label = "sold out";
     await orderedCow.save({ session });
 
-    possiblyBuyer.budget -= orderedCow.price;
+    possiblyBuyer.budget = possiblyBuyer.budget - orderedCow.price;
     await possiblyBuyer.save({ session });
+
+    // const update = {
+    //   $set: {
+    //     budget: possiblyBuyer.budget - orderedCow.price,
+    //   },
+    // };
+    // await Users.updateOne({ _id: possiblyBuyer._id }, update, { session });
+
     const seller = orderedCow.seller as IUser;
+
     seller.income = seller.income + orderedCow.price;
     await orderedCow.save({ session });
 
@@ -62,4 +74,12 @@ const getOrders = async () => {
   return result;
 };
 
-export const orderServices = { buyCow, getOrders };
+const getSingleOrder = async (id: string) => {
+  const result = await Orders.findOne({ _id: id });
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Order not found");
+  }
+  return result;
+};
+
+export const orderServices = { buyCow, getOrders, getSingleOrder };

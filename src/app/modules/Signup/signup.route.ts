@@ -6,15 +6,15 @@ import { LoginValidation } from "../users/user.validation";
 const router = express.Router();
 
 router.post(
-  "/signup",
-  validateRequest(SignupValidation.signupZodSchema),
-  signupController.signup
-);
-
-router.post(
   "/login",
   validateRequest(LoginValidation.loginZodSchema),
   signupController.loginUser
+);
+
+router.post(
+  "/signup",
+  validateRequest(SignupValidation.signupZodSchema),
+  signupController.signup
 );
 
 router.post(
@@ -22,4 +22,5 @@ router.post(
   validateRequest(SignupValidation.refreshTokenZodSchema),
   signupController.refreshToken
 );
+
 export const signupRoutes = router;

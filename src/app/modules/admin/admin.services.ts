@@ -12,8 +12,8 @@ const createAdmin = async (payload: IAdmin) => {
   }
 
   const result = await Admin.create(payload);
-  const { phoneNumber, role, name, address } = result;
-  return { phoneNumber, role, name, address };
+  const { phoneNumber, role, name, address, _id } = result;
+  return { phoneNumber, role, name, address, _id };
 };
 
 const loginAdmin = async (payload: {

@@ -21,4 +21,9 @@ router.get(
   orderController.getOrders
 );
 
+router.get(
+  "/:id",
+  auth(ROLES.ADMIN, ROLES.BUYER, ROLES.SELLER),
+  orderController.getSingleOrder
+);
 export const OrderRoutes = router;
