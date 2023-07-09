@@ -6,10 +6,18 @@ import { ROLES } from "../../../shared/Roles";
 const router = express.Router();
 
 // get my profile information
-router.get("/my-profile", auth(ROLES.ADMIN), UserController.myProfile);
+router.get(
+  "/my-profile",
+  auth(ROLES.SELLER, ROLES.BUYER),
+  UserController.myProfile
+);
 
 // update my profile information
-router.patch("/my-profile", auth(ROLES.ADMIN), UserController.updateMyProfile);
+router.patch(
+  "/my-profile",
+  auth(ROLES.SELLER, ROLES.BUYER),
+  UserController.updateMyProfile
+);
 
 // get single user
 router.get("/:id", auth(ROLES.ADMIN), UserController.getSingleUser);

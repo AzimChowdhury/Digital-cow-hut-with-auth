@@ -30,7 +30,7 @@ const loginUser = async (payload: {
   const isUserExist = await Users.isUserExist(phoneNumber);
 
   if (!isUserExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Admin does not exist");
+    throw new ApiError(httpStatus.NOT_FOUND, "User does not exist");
   }
   if (
     (await Users.isPasswordMatched(password, isUserExist.password)) === false

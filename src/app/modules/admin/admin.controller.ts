@@ -3,6 +3,9 @@ import { AdminServices } from "./admin.services";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import config from "../../../config";
+import { jwtHelpers } from "../../../helpers/jwtHelpers";
+import { Secret } from "jsonwebtoken";
+import { IAdmin } from "./admin.interface";
 
 const createAdmin = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -58,8 +61,62 @@ const refreshToken = async (req: Request, res: Response) => {
   });
 };
 
+const myProfile = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new Error("Token is not provided");
+  }
+  try {
+    const verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.secret as Secret
+    );
+    const { _id } = verifiedToken;
+    const result = await AdminServices.myProfile(_id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "My profile information fetched successfully !",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateMyProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new Error("Token is not provided");
+  }
+  try {
+    const verifiedToken = jwtHelpers.verifyToken(
+      token,
+      config.jwt.secret as Secret
+    );
+    const { _id } = verifiedToken;
+
+    const updateData = req.body;
+    const result = await AdminServices.updateMyProfile(_id, updateData);
+    sendResponse<IAdmin>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Profile updated successfully !",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const AdminController = {
   createAdmin,
   loginAdmin,
   refreshToken,
+  myProfile,
+  updateMyProfile,
 };

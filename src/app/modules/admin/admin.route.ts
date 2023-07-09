@@ -6,6 +6,7 @@ import auth from "../../middleware/auth";
 import config from "../../../config";
 import { LoginValidation } from "../users/user.validation";
 import { SignupValidation } from "../Signup/signup.validation";
+import { ROLES } from "../../../shared/Roles";
 const router = express.Router();
 
 router.post(
@@ -25,4 +26,11 @@ router.post(
   validateRequest(SignupValidation.refreshTokenZodSchema),
   AdminController.refreshToken
 );
+
+// get my profile information
+router.get("/my-profile", auth(ROLES.ADMIN), AdminController.myProfile);
+
+// update my profile information
+router.patch("/my-profile", auth(ROLES.ADMIN), AdminController.updateMyProfile);
+
 export const AdminRoutes = router;

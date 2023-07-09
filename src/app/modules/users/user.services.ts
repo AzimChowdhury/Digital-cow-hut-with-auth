@@ -2,8 +2,6 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { IUser } from "./user.interface";
 import { Users } from "./user.model";
-import { Admin } from "../admin/admin.model";
-import { IAdmin } from "../admin/admin.interface";
 
 const getAllUsers = async () => {
   const result = await Users.find();
@@ -59,7 +57,7 @@ const deleteUser = async (id: string) => {
 };
 
 const myProfile = async (id: string) => {
-  const result = await Admin.findOne({ _id: id });
+  const result = await Users.findOne({ _id: id });
   if (result) {
     const { name, phoneNumber, role, _id, address } = result;
     return { name, phoneNumber, role, _id, address };
@@ -70,9 +68,9 @@ const myProfile = async (id: string) => {
 
 const updateMyProfile = async (
   id: string,
-  payload: Partial<IAdmin>
-): Promise<IAdmin | null> => {
-  const isExist = await Admin.findOne({ _id: id });
+  payload: Partial<IUser>
+): Promise<IUser | null> => {
+  const isExist = await Users.findOne({ _id: id });
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, "profile not found !");
@@ -80,7 +78,7 @@ const updateMyProfile = async (
 
   const { name, ...userData } = payload;
 
-  const updatedUserData: Partial<IAdmin> = { ...userData };
+  const updatedUserData: Partial<IUser> = { ...userData };
 
   // dynamically handling
   if (name && Object.keys(name).length > 0) {
@@ -90,7 +88,7 @@ const updateMyProfile = async (
     });
   }
 
-  const result = await Admin.findOneAndUpdate({ _id: id }, updatedUserData, {
+  const result = await Users.findOneAndUpdate({ _id: id }, updatedUserData, {
     new: true,
   });
   return result;
