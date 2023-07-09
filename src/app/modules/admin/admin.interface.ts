@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 
 export type IAdmin = {
+  _id?: string;
   phoneNumber: string;
   role: string;
   password: string;

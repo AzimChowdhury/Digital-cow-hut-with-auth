@@ -40,14 +40,6 @@ const buyCow = async (cowId: string, buyerId: string) => {
 
     possiblyBuyer.budget = possiblyBuyer.budget - orderedCow.price;
     await possiblyBuyer.save({ session });
-
-    // const update = {
-    //   $set: {
-    //     budget: possiblyBuyer.budget - orderedCow.price,
-    //   },
-    // };
-    // await Users.updateOne({ _id: possiblyBuyer._id }, update, { session });
-
     const seller = orderedCow.seller as IUser;
 
     seller.income = seller.income + orderedCow.price;

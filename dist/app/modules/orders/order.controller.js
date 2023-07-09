@@ -16,6 +16,7 @@ exports.orderController = void 0;
 const order_services_1 = require("./order.services");
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const orderCow = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { cow, buyer } = req.body;
@@ -45,7 +46,26 @@ const getOrders = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         next(error);
     }
 });
+const getSingleOrder = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    if (!id) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "id not provided");
+    }
+    try {
+        const result = yield order_services_1.orderServices.getSingleOrder(id);
+        (0, sendResponse_1.default)(res, {
+            statusCode: http_status_1.default.OK,
+            success: true,
+            message: "Order fetched successfully !",
+            data: result,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.orderController = {
     orderCow,
     getOrders,
+    getSingleOrder,
 };

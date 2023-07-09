@@ -17,6 +17,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cows_model_1 = require("../cows/cows.model");
 const user_model_1 = require("../users/user.model");
 const order_model_1 = require("./order.model");
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const http_status_1 = __importDefault(require("http-status"));
 const buyCow = (cowId, buyerId) => __awaiter(void 0, void 0, void 0, function* () {
     const orderedCow = yield cows_model_1.Cows.findById(cowId).populate("seller");
     if (!orderedCow) {
@@ -42,8 +44,14 @@ const buyCow = (cowId, buyerId) => __awaiter(void 0, void 0, void 0, function* (
         session.startTransaction();
         orderedCow.label = "sold out";
         yield orderedCow.save({ session });
-        possiblyBuyer.budget -= orderedCow.price;
+        possiblyBuyer.budget = possiblyBuyer.budget - orderedCow.price;
         yield possiblyBuyer.save({ session });
+        // const update = {
+        //   $set: {
+        //     budget: possiblyBuyer.budget - orderedCow.price,
+        //   },
+        // };
+        // await Users.updateOne({ _id: possiblyBuyer._id }, update, { session });
         const seller = orderedCow.seller;
         seller.income = seller.income + orderedCow.price;
         yield orderedCow.save({ session });
@@ -66,4 +74,11 @@ const getOrders = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield order_model_1.Orders.find();
     return result;
 });
-exports.orderServices = { buyCow, getOrders };
+const getSingleOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.Orders.findOne({ _id: id });
+    if (!result) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "Order not found");
+    }
+    return result;
+});
+exports.orderServices = { buyCow, getOrders, getSingleOrder };

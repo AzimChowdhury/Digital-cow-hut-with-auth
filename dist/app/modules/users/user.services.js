@@ -67,9 +67,40 @@ const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.Users.findByIdAndDelete({ _id: id });
     return result;
 });
+const myProfile = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.Users.findOne({ _id: id });
+    if (result) {
+        const { name, phoneNumber, role, _id, address } = result;
+        return { name, phoneNumber, role, _id, address };
+    }
+    else {
+        throw new Error();
+    }
+});
+const updateMyProfile = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExist = yield user_model_1.Users.findOne({ _id: id });
+    if (!isExist) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "profile not found !");
+    }
+    const { name } = payload, userData = __rest(payload, ["name"]);
+    const updatedUserData = Object.assign({}, userData);
+    // dynamically handling
+    if (name && Object.keys(name).length > 0) {
+        Object.keys(name).forEach((key) => {
+            const nameKey = `name.${key}`;
+            updatedUserData[nameKey] = name[key];
+        });
+    }
+    const result = yield user_model_1.Users.findOneAndUpdate({ _id: id }, updatedUserData, {
+        new: true,
+    });
+    return result;
+});
 exports.UserServices = {
     getAllUsers,
     getSingleUser,
     updateUser,
     deleteUser,
+    myProfile,
+    updateMyProfile,
 };

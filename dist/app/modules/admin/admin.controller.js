@@ -8,38 +8,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
-const user_services_1 = require("./user.services");
+exports.AdminController = void 0;
+const admin_services_1 = require("./admin.services");
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const http_status_1 = __importDefault(require("http-status"));
-const jwtHelpers_1 = require("../../../helpers/jwtHelpers");
 const config_1 = __importDefault(require("../../../config"));
-const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const jwtHelpers_1 = require("../../../helpers/jwtHelpers");
+const createAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = yield user_services_1.UserServices.getAllUsers();
+        const result = yield admin_services_1.AdminServices.createAdmin(req.body);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
-            message: "Users fetched successfully !",
-            meta: result.meta,
-            data: result.data,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-const getSingleUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield user_services_1.UserServices.getSingleUser(req.params.id);
-        (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: "User fetched successfully !",
+            message: "admin created successfully",
             data: result,
         });
     }
@@ -47,36 +43,37 @@ const getSingleUser = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
-const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const updateData = req.body;
-        const result = yield user_services_1.UserServices.updateUser(id, updateData);
-        (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: "User updated successfully !",
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
+const loginAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = __rest(req.body, []);
+    const result = yield admin_services_1.AdminServices.loginAdmin(data);
+    const { refreshToken } = result, others = __rest(result, ["refreshToken"]);
+    const cookieOptions = {
+        secure: config_1.default.env === "production",
+        httpOnly: true,
+    };
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Admin logged in successfully !",
+        data: others,
+    });
 });
-const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const id = req.params.id;
-        const result = yield user_services_1.UserServices.deleteUser(id);
-        (0, sendResponse_1.default)(res, {
-            statusCode: http_status_1.default.OK,
-            success: true,
-            message: "User deleted successfully !",
-            data: result,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
+const refreshToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refreshToken } = req.cookies;
+    console.log(refreshToken);
+    const result = yield admin_services_1.AdminServices.refreshToken(refreshToken);
+    const cookieOptions = {
+        secure: config_1.default.env === "production",
+        httpOnly: true,
+    };
+    res.cookie("refreshToken", refreshToken, cookieOptions);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User logged in successfully !",
+        data: result,
+    });
 });
 const myProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.headers.authorization;
@@ -86,7 +83,7 @@ const myProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     try {
         const verifiedToken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.default.jwt.secret);
         const { _id } = verifiedToken;
-        const result = yield user_services_1.UserServices.myProfile(_id);
+        const result = yield admin_services_1.AdminServices.myProfile(_id);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
@@ -107,7 +104,7 @@ const updateMyProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const verifiedToken = jwtHelpers_1.jwtHelpers.verifyToken(token, config_1.default.jwt.secret);
         const { _id } = verifiedToken;
         const updateData = req.body;
-        const result = yield user_services_1.UserServices.updateMyProfile(_id, updateData);
+        const result = yield admin_services_1.AdminServices.updateMyProfile(_id, updateData);
         (0, sendResponse_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
@@ -119,11 +116,10 @@ const updateMyProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next(error);
     }
 });
-exports.UserController = {
-    getAllUsers,
-    getSingleUser,
-    updateUser,
-    deleteUser,
+exports.AdminController = {
+    createAdmin,
+    loginAdmin,
+    refreshToken,
     myProfile,
     updateMyProfile,
 };
