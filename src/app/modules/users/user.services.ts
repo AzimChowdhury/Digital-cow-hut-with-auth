@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { IUser } from "./user.interface";
 import { Users } from "./user.model";
-
+//! user services
 const getAllUsers = async () => {
   const result = await Users.find();
   const total = await Users.countDocuments();
