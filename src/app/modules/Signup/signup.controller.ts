@@ -40,7 +40,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       data: others,
     });
   } catch (error) {
-    next();
+    next(error);
   }
 };
 
@@ -68,7 +68,7 @@ const refreshToken = async (
       data: result,
     });
   } catch (error) {
-    next();
+    next(error);
   }
 };
 

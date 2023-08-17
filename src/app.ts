@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Application route
-app.use("/api/v1/", router);
+app.use("/api/v1", router);
 
 //default
 app.get("/", async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +19,6 @@ app.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
 // global error handler
 app.use(globalErrorHandler);
-
 // handle not found
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.NOT_FOUND).json({
